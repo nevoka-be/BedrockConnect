@@ -3,17 +3,18 @@ package main.com.pyratron.pugmatt.bedrockconnect;
 import main.com.pyratron.pugmatt.bedrockconnect.sql.Data;
 import main.com.pyratron.pugmatt.bedrockconnect.sql.MySQL;
 import main.com.pyratron.pugmatt.bedrockconnect.utils.PaletteManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.*;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
 public class BedrockConnect {
-
+    private static final Logger logger = LogManager.getLogger();
 
     public static PaletteManager paletteManager;
 
@@ -32,7 +33,8 @@ public class BedrockConnect {
     public static File whitelistfile;
 
     public static void main(String[] args) {
-        System.out.println("-= BedrockConnect =-");
+
+        logger.info("-= BedrockConnect =-");
         paletteManager =  new PaletteManager();
 
         try {
@@ -66,7 +68,7 @@ public class BedrockConnect {
                     try {
                         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 
-                        System.out.println("Local IPv4 IPs:");
+                        logger.info("Local IPv4 IPs:");
                         while (interfaces.hasMoreElements()) {
                             NetworkInterface iface = interfaces.nextElement();
 
@@ -80,12 +82,12 @@ public class BedrockConnect {
                                 if(!(addr instanceof Inet4Address)) continue;
 
                                 ip = addr.getHostAddress();
-                                System.out.println(iface.getDisplayName() + ": " + ip);
+                                logger.info(iface.getDisplayName() + ": " + ip);
                             }
                         }
 
                         Scanner reader = new Scanner(System.in);  // Reading from System.in
-                        System.out.print("\nWhich IP should be used for the DNS records: ");
+                        logger.info("Which IP should be used for the DNS records: ");
                         String selectedIP = reader.next().replaceAll("\\s+","");
                         reader.close();
 
@@ -134,14 +136,14 @@ public class BedrockConnect {
             "MySQL Database: " + database + "\n" +
             "MySQL User: " + username);
 
-            System.out.println("\nServer Limit: " + serverLimit + "\n" + "Port: " + port + "\n");
+            logger.info("Server Limit: " + serverLimit + ", " + "Port: " + port);
 
             CustomServerHandler.initialize();
-            System.out.printf("Loaded %d custom servers\n", CustomServerHandler.getServers().length);
+            logger.info(String.format("Loaded %d custom servers", CustomServerHandler.getServers().length));
             
-            if (Whitelist.hasWhitelist()) {
-            	System.out.printf("There are %d whitelisted players\n", Whitelist.getWhitelist().size());
-            }
+            if (Whitelist.hasWhitelist())
+                logger.info(String.format("There are %d whitelisted players\n", Whitelist.getWhitelist().size()));
+
             
             if(!noDB) {
                 MySQL = new MySQL(hostname, database, username, password);
@@ -207,5 +209,4 @@ public class BedrockConnect {
         int subIndex = index + target.length();
         return str.substring(subIndex);
     }
-
 }

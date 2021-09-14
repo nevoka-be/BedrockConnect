@@ -4,13 +4,9 @@ import com.nukkitx.math.vector.Vector2f;
 import com.nukkitx.math.vector.Vector3i;
 import com.nukkitx.nbt.NBTOutputStream;
 import com.nukkitx.nbt.NbtMap;
-import com.nukkitx.nbt.NbtMapBuilder;
 import com.nukkitx.nbt.NbtUtils;
-import com.nukkitx.protocol.bedrock.Bedrock;
-import com.nukkitx.protocol.bedrock.BedrockPacket;
 import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import com.nukkitx.protocol.bedrock.data.*;
-import com.nukkitx.protocol.bedrock.data.inventory.ContainerId;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import com.nukkitx.protocol.bedrock.packet.*;
 import com.nukkitx.math.vector.Vector3f;
@@ -20,7 +16,6 @@ import main.com.pyratron.pugmatt.bedrockconnect.sql.Data;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
@@ -111,9 +106,15 @@ public class BCPlayer {
 
         TextPacket text = new TextPacket();
         text.setType(TextPacket.Type.TIP);
-        text.setMessage("==!!== Move around to re-trigger the popup ==!!==");
+        text.setMessage("==!!== Welcome to Buildserver Server List ==!!==");
         text.setXuid(uuid);
         session.sendPacket(text);
+
+        TextPacket text1 = new TextPacket();
+        text1.setType(TextPacket.Type.TIP);
+        text1.setMessage("==!!== Move around to re-trigger the popup ==!!==");
+        text1.setXuid(uuid);
+        session.sendPacket(text1);
 
         TextPacket text2 = new TextPacket();
         text2.setType(TextPacket.Type.RAW);

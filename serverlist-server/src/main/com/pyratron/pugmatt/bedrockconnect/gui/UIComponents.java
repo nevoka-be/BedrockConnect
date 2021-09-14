@@ -2,8 +2,9 @@ package main.com.pyratron.pugmatt.bedrockconnect.gui;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.nukkitx.protocol.bedrock.packet.ModalFormRequestPacket;
-import net.minidev.json.JSONUtil;
+import main.com.pyratron.pugmatt.bedrockconnect.BedrockConnect;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UIComponents {
+    private static final Logger logger = LogManager.getLogger();
 
     public static JsonObject createLabel(String text) {
         JsonObject obj = new JsonObject();
@@ -119,7 +121,7 @@ public class UIComponents {
             }
             return strings;
         } catch(ParseException e) {
-            System.out.println(e.toString());
+            logger.error(e.toString());
         }
 
         return null;

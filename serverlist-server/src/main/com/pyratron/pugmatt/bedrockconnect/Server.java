@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.nukkitx.protocol.bedrock.*;
-import com.nukkitx.protocol.bedrock.v428.Bedrock_v428;
 import main.com.pyratron.pugmatt.bedrockconnect.listeners.PacketHandler;
 import main.com.pyratron.pugmatt.bedrockconnect.utils.BedrockProtocol;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 import javax.annotation.Nonnull;
@@ -14,7 +15,7 @@ import java.net.InetSocketAddress;
 import java.util.*;
 
 public class Server {
-
+    private static final Logger logger = LogManager.getLogger();
     public BedrockServer server;
     public BedrockPong pong;
 
@@ -36,7 +37,7 @@ public class Server {
     }
 
     public void addPlayer(BCPlayer player) {
-        System.out.println("Total users connected: " + this.players.size());
+        logger.info(String.format("Total users connected: %d", this.players.size()));
         this.players.add(player);
     }
 
@@ -56,7 +57,7 @@ public class Server {
         pong = new BedrockPong();
         pong.setEdition("MCPE");
         pong.setMotd("Join To Open Server List");
-        pong.setSubMotd("BedrockConnect Server List");
+        pong.setSubMotd("Buildserver Server List");
         pong.setPlayerCount(0);
         pong.setMaximumPlayerCount(20);
         pong.setGameType("Survival");
@@ -81,7 +82,7 @@ public class Server {
         });
         // Start server up
         server.bind().join();
-        System.out.println("Bedrock Connection Started: 0.0.0.0:19132");
+        logger.info("Bedrock Connection Started: 0.0.0.0:19132");
         if(BedrockConnect.kickInactive) {
             Timer timer = new Timer();
             TimerTask task = new TimerTask() {

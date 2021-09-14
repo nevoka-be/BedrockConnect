@@ -2,7 +2,6 @@ package main.com.pyratron.pugmatt.bedrockconnect.gui;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.nukkitx.protocol.bedrock.Bedrock;
 import com.nukkitx.protocol.bedrock.packet.ModalFormRequestPacket;
 
 import main.com.pyratron.pugmatt.bedrockconnect.BedrockConnect;
@@ -38,7 +37,7 @@ public class UIForms {
         ModalFormRequestPacket mf = new ModalFormRequestPacket();
         mf.setFormId(UIForms.MAIN);
 
-        JsonObject out = UIComponents.createForm("form", "Server List");
+        JsonObject out = UIComponents.createForm("form", "Buildserver Server List");
         out.addProperty("content", "");
 
         JsonArray buttons = new JsonArray();
@@ -80,6 +79,7 @@ public class UIForms {
 
         return serverIndex;
     }
+
     public static MainFormButton getMainFormButton(int btnId, CustomServer[] customServers, List<String> playerServers) {
         int serverIndex = getServerIndex(btnId, customServers, playerServers);
 
@@ -112,10 +112,9 @@ public class UIForms {
         JsonObject out = UIComponents.createForm("custom_form", "Connect to a Server");
 
         JsonArray inputs = new JsonArray();
-
         inputs.add(UIComponents.createInput("Server Address", "Please enter IP or Address"));
         inputs.add(UIComponents.createInput("Server Port", "Please enter Port", "19132"));
-        inputs.add(UIComponents.createInput("(Optional) Display Name on Server List", "", ""));
+        inputs.add(UIComponents.createInput("Server Name (Optional)", "Please enter server name", ""));
         inputs.add(UIComponents.createToggle("Add to server list"));
 
         out.add("content", inputs);

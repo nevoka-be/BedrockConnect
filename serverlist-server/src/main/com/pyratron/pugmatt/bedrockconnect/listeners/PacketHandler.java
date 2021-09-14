@@ -1,16 +1,10 @@
 package main.com.pyratron.pugmatt.bedrockconnect.listeners;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.nimbusds.jwt.SignedJWT;
 import com.nukkitx.math.vector.Vector3f;
-import com.nukkitx.nbt.NbtUtils;
 import com.nukkitx.network.util.Preconditions;
-import com.nukkitx.protocol.bedrock.BedrockClient;
 import com.nukkitx.protocol.bedrock.BedrockPacketCodec;
-import com.nukkitx.protocol.bedrock.data.AttributeData;
 import com.nukkitx.protocol.bedrock.packet.*;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSObject;
@@ -19,11 +13,6 @@ import com.nukkitx.protocol.bedrock.BedrockServerSession;
 import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler;
 import com.nukkitx.protocol.bedrock.packet.LoginPacket;
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils;
-import com.nukkitx.protocol.bedrock.v388.Bedrock_v388;
-import com.nukkitx.protocol.bedrock.v407.Bedrock_v407;
-import io.netty.handler.codec.MessageAggregationException;
-import io.netty.util.AsciiString;
-import io.netty.util.internal.ThreadLocalRandom;
 import main.com.pyratron.pugmatt.bedrockconnect.BCPlayer;
 import main.com.pyratron.pugmatt.bedrockconnect.BedrockConnect;
 import main.com.pyratron.pugmatt.bedrockconnect.CustomServer;
@@ -35,18 +24,16 @@ import main.com.pyratron.pugmatt.bedrockconnect.gui.UIComponents;
 import main.com.pyratron.pugmatt.bedrockconnect.gui.UIForms;
 import main.com.pyratron.pugmatt.bedrockconnect.utils.BedrockProtocol;
 import net.minidev.json.JSONObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.security.interfaces.ECPublicKey;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class PacketHandler implements BedrockPacketHandler {
+    private static final Logger logger = LogManager.getLogger();
 
     private Server server;
     private BedrockServerSession session;
@@ -130,6 +117,7 @@ public class PacketHandler implements BedrockPacketHandler {
                                         String port = address.split(":")[1];
 
                                         try {
+                                            logger.info("Redirect " + name + " to "+ ip + ":" + port);
                                             transfer(ip, Integer.parseInt(port));
                                         } catch (Exception e) {
                                             session.sendPacketImmediately(UIForms.createError("Error connecting to server. Invalid address."));
@@ -140,6 +128,7 @@ public class PacketHandler implements BedrockPacketHandler {
                                     break;
                                 case CUSTOM_SERVER:
                                     CustomServer server = customServers[serverIndex - playerServers.size()];
+                                    logger.info("Redirect " + name + " to "+ server.getName());
                                     transfer(server.getAddress(), server.getPort());
                                     break;
                                 case FEATURED_SERVER:
@@ -147,21 +136,27 @@ public class PacketHandler implements BedrockPacketHandler {
 
                                     switch (featuredServer) {
                                         case 0: // Hive
+                                            logger.info("Redirect " + name + " to The hive");
                                             transfer("167.114.81.89", 19132);
                                             break;
                                         case 1: // Mineplex
+                                            logger.info("Redirect " + name + " to Mineplex");
                                             transfer("108.178.12.125", 19132);
                                             break;
                                         case 2: // Cubecraft
+                                            logger.info("Redirect " + name + " to Cubecraft");
                                             transfer("play.cubecraft.net", 19132);
                                             break;
                                         case 3: // Lifeboat
+                                            logger.info("Redirect " + name + " to Lifeboat");
                                             transfer("51.222.26.28", 19132);
                                             break;
                                         case 4: // Mineville
+                                            logger.info("Redirect " + name + " to Mineville");
                                             transfer("168.62.164.235", 19132);
                                             break;
                                         case 5: // Galaxite
+                                            logger.info("Redirect " + name + " to Galaxite");
                                             transfer("51.222.8.223", 19132);
                                             break;
                                     }
@@ -278,7 +273,7 @@ public class PacketHandler implements BedrockPacketHandler {
     }
 
     public void disconnect() {
-        System.out.println(name + " disconnected");
+        logger.info(name + " disconnected");
         if(player != null)
             server.removePlayer(player);
     }
@@ -392,7 +387,7 @@ public class PacketHandler implements BedrockPacketHandler {
             JWSObject clientJwt = JWSObject.parse(packet.getSkinData().toString());
             verifyJwt(clientJwt, identityPublicKey);
 
-            System.out.println("Made it through login - " + "User: " + extraData.getAsString("displayName") + " (" + extraData.getAsString("identity") + ")");
+            logger.info("Made it through login - " + "User: " + extraData.getAsString("displayName") + " (" + extraData.getAsString("identity") + ")");
 
 
             name = extraData.getAsString("displayName");
@@ -402,7 +397,7 @@ public class PacketHandler implements BedrockPacketHandler {
             //whitelist check
             if (Whitelist.hasWhitelist() && !Whitelist.isPlayerWhitelisted(name)) {
             	session.disconnect(Whitelist.getWhitelistMessage());
-            	System.out.println("Kicked " + name + ": \"" + Whitelist.getWhitelistMessage() + "\"");
+                logger.info("Kicked " + name + ": \"" + Whitelist.getWhitelistMessage() + "\"");
             }
 
             PlayStatusPacket status = new PlayStatusPacket();

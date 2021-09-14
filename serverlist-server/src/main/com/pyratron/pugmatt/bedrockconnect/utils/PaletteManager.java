@@ -10,18 +10,18 @@ import com.nukkitx.nbt.NbtMap;
 import com.nukkitx.nbt.NbtUtils;
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import main.com.pyratron.pugmatt.bedrockconnect.BedrockConnect;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.nio.ByteOrder;
 import java.util.*;
 
 // https://github.com/DragonetMC/DragonProxy/blob/rewrite/proxy/src/main/java/org/dragonet/proxy/util/PaletteManager.java
 // Author: lukeeey
 
 public class PaletteManager {
-
+    private static final Logger logger = LogManager.getLogger();
     private ArrayList<RuntimeEntry> entries;
 
     private ByteBuf cachedPalette;
@@ -120,7 +120,7 @@ public class PaletteManager {
             tag = (NbtList<NbtMap>) nbtInputStream.readTag();
             nbtInputStream.close();
         } catch (Exception ex) {
-            System.out.println("Failed to receive blocks palette");
+            logger.error("Failed to receive blocks palette");
             throw new AssertionError(ex);
         }
 
