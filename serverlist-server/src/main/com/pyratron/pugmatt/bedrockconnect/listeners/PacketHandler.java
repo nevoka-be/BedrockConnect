@@ -159,6 +159,10 @@ public class PacketHandler implements BedrockPacketHandler {
                                             logger.info("Redirect " + name + " to Galaxite");
                                             transfer("51.222.8.223", 19132);
                                             break;
+                                        case 6: // Pixel Paradise
+                                            logger.info("Redirect " + name + " to Pixel Paradise");
+                                            transfer("40.87.84.106", 19132);
+                                            break;
                                     }
                                     break;
                             }
